@@ -14,4 +14,3 @@ def handle_chat(request:ChatRequest) -> LLMResponse:
         messages=request.messages,
         temperature=request.temperature,
     )
-    
