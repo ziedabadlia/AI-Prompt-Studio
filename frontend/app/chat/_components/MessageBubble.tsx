@@ -2,17 +2,25 @@ import type { ChatMessage } from "../_utils/types";
 
 export function MessageBubble({ role, content }: ChatMessage) {
   const isUser = role === "user";
-  return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[75%] rounded-2xl px-4 py-2 whitespace-pre-wrap text-sm leading-relaxed ${
-          isUser
-            ? "bg-blue-600 text-white rounded-br-sm"
-            : "bg-gray-100 text-gray-900 rounded-bl-sm"
-        }`}
-      >
-        {content}
+
+  if (isUser) {
+    return (
+      <div className='flex justify-end'>
+        <div className='max-w-[75%] rounded-2xl rounded-br-md bg-[var(--user-bubble)] px-4 py-2.5 text-[15px] leading-relaxed whitespace-pre-wrap text-[var(--foreground)]'>
+          {content}
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className='flex gap-3'>
+      <span className='mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-[11px] font-semibold text-white'>
+        AI
+      </span>
+      <p className='flex-1 whitespace-pre-wrap pt-1 text-[15px] leading-relaxed text-[var(--foreground)]'>
+        {content}
+      </p>
     </div>
   );
 }
