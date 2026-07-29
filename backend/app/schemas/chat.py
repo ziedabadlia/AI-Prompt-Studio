@@ -7,4 +7,4 @@ class ChatRequest(BaseModel):
     messages: List[Message]
     temperature: float = Field(ge=0.0, le=2.0, default=0.7)
     provider: Literal["gemini"] = "gemini"
-    model_name: Literal["gemini-3.5-flash"] = "gemini-3.5-flash"
+    model_name: Literal["gemini-3.5-flash", "gemini-3.5-flash-lite"] = "gemini-3.5-flash-lite"
