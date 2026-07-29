@@ -19,12 +19,12 @@ export function ChatInput({
   }
 
   return (
-    <div className='border-t border-gray-200 p-4'>
-      <div className='flex items-end gap-2'>
+    <div className='border-t border-[var(--border)] bg-[var(--surface)] px-6 py-4'>
+      <div className='flex items-end gap-2 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 shadow-sm transition focus-within:border-[var(--accent)] focus-within:ring-2 focus-within:ring-[var(--accent)]/15'>
         <textarea
-          className='flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+          className='flex-1 resize-none bg-transparent py-1 text-[15px] text-[var(--foreground)] placeholder:text-[var(--text-secondary)] focus:outline-none'
           rows={1}
-          placeholder='Type a message…'
+          placeholder='Message Prompt Studio...'
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -33,9 +33,20 @@ export function ChatInput({
         <button
           onClick={onSend}
           disabled={disabled || !value.trim()}
-          className='rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-700 transition'
+          className='mb-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-white transition hover:bg-[var(--accent-dim)] disabled:cursor-not-allowed disabled:opacity-30'
         >
-          Send
+          <svg
+            width='16'
+            height='16'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2.5'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          >
+            <path d='M12 19V5M5 12l7-7 7 7' />
+          </svg>
         </button>
       </div>
     </div>
