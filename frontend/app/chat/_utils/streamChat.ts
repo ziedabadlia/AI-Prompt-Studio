@@ -1,7 +1,8 @@
-import type { ChatMessage, StreamEnvelope } from "./types";
+import type { ChatMessage, ChatSettings, StreamEnvelope } from "./types";
 
 export async function streamChat(
   messages: ChatMessage[],
+  settings: ChatSettings,
   onChunk: (content: string) => void,
   onFinal: (final: Extract<StreamEnvelope, { type: "final" }>) => void,
   onError: (err: Extract<StreamEnvelope, { type: "error" }>) => void,
@@ -11,7 +12,12 @@ export async function streamChat(
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages }),
+      body: JSON.stringify({
+        messages,
+        system_prompt: settings.systemPrompt,
+        temperature: settings.temperature,
+        model_name: settings.modelName,
+      }),
     },
   );
 
