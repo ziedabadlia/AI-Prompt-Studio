@@ -1,18 +1,39 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { streamChat } from "../_utils/streamChat";
 import type { ChatMessage, ChatSettings } from "../_utils/types";
-import { DEFAULT_CHAT_SETTINGS } from "../_utils/types";
 
-export function useChatStream() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+interface UseChatStreamArgs {
+  messages: ChatMessage[];
+  setMessages: (messages: ChatMessage[]) => void;
+  settings: ChatSettings;
+  setSettings: (settings: ChatSettings) => void;
+  onFirstExchangeComplete?: (
+    userMessage: string,
+    assistantMessage: string,
+  ) => void;
+}
+
+export function useChatStream({
+  messages,
+  setMessages,
+  settings,
+  setSettings,
+  onFirstExchangeComplete,
+}: UseChatStreamArgs) {
   const [streamingContent, setStreamingContent] = useState<string>("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [settings, setSettings] = useState<ChatSettings>(DEFAULT_CHAT_SETTINGS);
+
+  // Keep a ref so the callback always uses the latest render's values
+  // (e.g. conv.activeId after ensureActiveConversationWithMessages has fired).
+  const onFirstExchangeCompleteRef = useRef(onFirstExchangeComplete);
+  onFirstExchangeCompleteRef.current = onFirstExchangeComplete;
 
   async function sendMessage(userInput: string) {
     const trimmed = userInput.trim();
     if (!trimmed || isStreaming) return;
+
+    const isFirstMessage = messages.length === 0;
 
     const userMessage: ChatMessage = { role: "user", content: trimmed };
     const nextMessages = [...messages, userMessage];
@@ -26,16 +47,24 @@ export function useChatStream() {
       await streamChat(
         nextMessages,
         settings,
-        (chunk) => {
-          setStreamingContent((prev) => prev + chunk);
-        },
+        (chunk) => setStreamingContent((prev) => prev + chunk),
         (final) => {
-          setMessages((prev) => [
-            ...prev,
-            { role: "assistant", content: final.content },
-          ]);
+          const updated = [
+            ...nextMessages,
+            {
+              role: "assistant" as const,
+              content: final.content,
+              inputTokens: final.input_tokens,
+              outputTokens: final.output_tokens,
+            },
+          ];
+          setMessages(updated);
           setStreamingContent("");
           setIsStreaming(false);
+
+          if (isFirstMessage) {
+            onFirstExchangeCompleteRef.current?.(trimmed, final.content);
+          }
         },
         (err) => {
           setError(err.message);
@@ -55,12 +84,9 @@ export function useChatStream() {
   }
 
   return {
-    messages,
     streamingContent,
     isStreaming,
     error,
     sendMessage,
-    settings,
-    setSettings,
   };
 }

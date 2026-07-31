@@ -29,7 +29,10 @@ class GeminiClient:
             response = self.client.models.generate_content(
                 model=self.model_name,
                 contents=contents,
-                config=types.GenerateContentConfig(system_instruction=system_prompt,temperature=temperature)
+                config=types.GenerateContentConfig(
+                    temperature=temperature,
+                    **({"system_instruction": system_prompt} if system_prompt else {}),
+                ),
             )
         except errors.APIError as e:
             raise LLMProviderError(str(e.message),e.code)
@@ -44,7 +47,10 @@ class GeminiClient:
         stream = self.client.models.generate_content_stream(
             model=self.model_name,
             contents=contents,
-            config=types.GenerateContentConfig(system_instruction=system_prompt, temperature=temperature),
+            config=types.GenerateContentConfig(
+                temperature=temperature,
+                **({"system_instruction": system_prompt} if system_prompt else {}),
+            ),
         )
         accumulated_text = ""
         chunk = None

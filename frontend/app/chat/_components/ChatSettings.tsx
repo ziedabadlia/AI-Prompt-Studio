@@ -71,9 +71,9 @@ export function ChatSettings({ settings, onChange }: ChatSettingsProps) {
           min={0}
           max={2}
           step={0.1}
-          value={settings.temperature}
-          onValueChange={(value) =>
-            onChange({ ...settings, temperature: value as number })
+          value={[settings.temperature]}
+          onValueChange={(values) =>
+            onChange({ ...settings, temperature: (values as number[])[0] })
           }
         />
         <div className='flex justify-between text-[10px] text-[var(--text-secondary)]'>

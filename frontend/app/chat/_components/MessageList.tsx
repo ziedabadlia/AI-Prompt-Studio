@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { ChatMessage } from "../_utils/types";
 import { MessageBubble } from "./MessageBubble";
 
@@ -14,6 +15,12 @@ export function MessageList({
   isStreaming,
   error,
 }: MessageListProps) {
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, streamingContent]);
+
   return (
     <div className='flex-1 space-y-5 overflow-y-auto bg-[var(--background)] px-6 py-8'>
       {messages.length === 0 && !isStreaming && (
@@ -25,7 +32,7 @@ export function MessageList({
       )}
 
       {messages.map((msg, i) => (
-        <MessageBubble key={i} role={msg.role} content={msg.content} />
+        <MessageBubble key={i} {...msg} />
       ))}
 
       {streamingContent && (
@@ -58,6 +65,9 @@ export function MessageList({
           {error}
         </div>
       )}
+
+      {/* Sentinel element — scrolled into view on every update */}
+      <div ref={bottomRef} />
     </div>
   );
 }
