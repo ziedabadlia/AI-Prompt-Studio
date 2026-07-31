@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* --- App theme (existing) --- */
   --background: #f7f8f5;
   --foreground: #1c1f1d;
 
@@ -15,17 +16,75 @@
   --user-bubble: #e7f4ed;
   --error: #c0392b;
   --error-soft: #fdf0ee;
+
+  /* --- shadcn required tokens --- */
+  --card: #ffffff;
+  --card-foreground: #1c1f1d;
+  --popover: #ffffff;
+  --popover-foreground: #1c1f1d;
+
+  --primary: #1f8a5f;
+  --primary-foreground: #ffffff;
+
+  --secondary: #eef1ee;
+  --secondary-foreground: #1c1f1d;
+
+  --muted: #eef1ee;
+  --muted-foreground: #6b7268;
+
+  /* shadcn's own "accent" — neutral hover/highlight, distinct from the brand --accent above */
+  --shadcn-accent: #eef1ee;
+  --shadcn-accent-foreground: #1c1f1d;
+
+  --destructive: #c0392b;
+  --destructive-foreground: #ffffff;
+
+  --input: #e4e7e1;
+  --ring: #1f8a5f;
+
+  --radius: 0.75rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-display: var(--font-display);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--shadcn-accent);
+  --color-accent-foreground: var(--shadcn-accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-fraunces {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
 }
