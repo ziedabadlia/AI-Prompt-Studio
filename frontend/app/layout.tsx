@@ -4,13 +4,13 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const fraunces = Fraunces({
-  variable: "--font-display",
+  variable: "--font-fraunces-base",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
 
 const publicSans = Public_Sans({
-  variable: "--font-sans",
+  variable: "--font-sans-base",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });

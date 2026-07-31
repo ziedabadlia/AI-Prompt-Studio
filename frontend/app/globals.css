@@ -76,15 +76,14 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+}
+
+.font-fraunces {
+  font-family: var(--font-fraunces-base), ui-serif, Georgia, serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-}
-
-.font-fraunces {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-family: var(--font-sans-base), ui-sans-serif, system-ui, sans-serif;
 }
