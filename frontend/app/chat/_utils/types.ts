@@ -1,6 +1,8 @@
 export type ChatMessage = {
   role: "user" | "assistant";
   content: string;
+  inputTokens?: number;
+  outputTokens?: number;
 };
 
 export type StreamEnvelope =
@@ -26,3 +28,14 @@ export const DEFAULT_CHAT_SETTINGS: ChatSettings = {
   temperature: 0.7,
   modelName: "gemini-3.5-flash-lite",
 };
+
+export interface Conversation {
+  id: string;
+  title: string;
+  createdAt: number;
+  messages: ChatMessage[];
+  settings: ChatSettings;
+}
+
+export const TOKEN_THRESHOLD_LOW = 200;
+export const TOKEN_THRESHOLD_HIGH = 800;
