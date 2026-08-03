@@ -10,16 +10,30 @@ import { ChatHeader } from "./ChatHeader";
 import { ChatSettings } from "./ChatSettings";
 import { ConversationSidebar } from "./ConversationSidebar";
 import { DEFAULT_CHAT_SETTINGS } from "../_utils/types";
+import type { ChatSettings as ChatSettingsType } from "../_utils/types";
 
 export function ChatContainer() {
   const [input, setInput] = useState("");
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [pendingSettings, setPendingSettings] =
+    useState<ChatSettingsType | null>(null);
 
   const searchParams = useSearchParams();
 
   const conv = useConversations(searchParams.get("id"));
   const router = useRouter();
   const pathname = usePathname();
+
+  const currentSettings =
+    conv.active?.settings ?? pendingSettings ?? DEFAULT_CHAT_SETTINGS;
+
+  function handleSettingsChange(settings: ChatSettingsType) {
+    if (conv.activeId) {
+      conv.updateSettings(conv.activeId, settings);
+    } else {
+      setPendingSettings(settings);
+    }
+  }
 
   const syncUrl = useCallback(
     (id: string | null) => {
@@ -55,7 +69,7 @@ export function ChatContainer() {
       const id = targetConvIdRef.current ?? conv.activeId;
       if (id) conv.updateMessages(id, messages);
     },
-    settings: conv.active?.settings ?? DEFAULT_CHAT_SETTINGS,
+    settings: currentSettings,
     setSettings: (settings) => {
       if (conv.activeId) conv.updateSettings(conv.activeId, settings);
     },
@@ -72,8 +86,12 @@ export function ChatContainer() {
     if (conv.activeId) {
       targetConvIdRef.current = conv.activeId;
     } else {
-      const newId = conv.ensureActiveConversation(trimmed);
+      const newId = conv.ensureActiveConversation(
+        trimmed,
+        pendingSettings ?? undefined,
+      );
       targetConvIdRef.current = newId;
+      setPendingSettings(null);
       syncUrl(newId);
     }
 
@@ -114,10 +132,8 @@ export function ChatContainer() {
       {/* Fixed settings sidebar on large screens */}
       <div className='hidden w-80 shrink-0 border-l border-[var(--border)] bg-[var(--surface)] lg:block'>
         <ChatSettings
-          settings={conv.active?.settings ?? DEFAULT_CHAT_SETTINGS}
-          onChange={(settings) => {
-            if (conv.activeId) conv.updateSettings(conv.activeId, settings);
-          }}
+          settings={currentSettings}
+          onChange={handleSettingsChange}
         />
       </div>
 
@@ -130,10 +146,8 @@ export function ChatContainer() {
           />
           <div className='w-80 shrink-0 border-l border-[var(--border)] bg-[var(--surface)] shadow-xl'>
             <ChatSettings
-              settings={conv.active?.settings ?? DEFAULT_CHAT_SETTINGS}
-              onChange={(settings) => {
-                if (conv.activeId) conv.updateSettings(conv.activeId, settings);
-              }}
+              settings={currentSettings}
+              onChange={handleSettingsChange}
             />
           </div>
         </div>

@@ -12,6 +12,7 @@ import type {
   ChatSettings as ChatSettingsType,
   ModelName,
 } from "../_utils/types";
+import { PromptTemplates } from "./PromptTemplates";
 
 type ChatSettingsProps = {
   settings: ChatSettingsType;
@@ -27,9 +28,7 @@ export function ChatSettings({ settings, onChange }: ChatSettingsProps) {
   return (
     <div className='flex h-full flex-col gap-6 overflow-y-auto p-5'>
       <div>
-        <h2
-          className='font-fraunces text-sm font-semibold text-[var(--foreground)]'
-        >
+        <h2 className='font-fraunces text-sm font-semibold text-[var(--foreground)]'>
           Settings
         </h2>
         <p className='mt-1 text-xs text-[var(--text-secondary)]'>
@@ -83,16 +82,12 @@ export function ChatSettings({ settings, onChange }: ChatSettingsProps) {
       </div>
 
       {/* System prompt */}
-      <div className='flex flex-1 flex-col gap-1.5'>
-        <Label htmlFor='system-prompt'>System prompt</Label>
-        <Textarea
-          id='system-prompt'
-          value={settings.systemPrompt}
-          onChange={(e) =>
-            onChange({ ...settings, systemPrompt: e.target.value })
+      <div className='flex flex-1 flex-col'>
+        <PromptTemplates
+          systemPrompt={settings.systemPrompt}
+          onSystemPromptChange={(value) =>
+            onChange({ ...settings, systemPrompt: value })
           }
-          placeholder='e.g. You are a concise, technical assistant.'
-          className='min-h-[120px] flex-1 resize-none'
         />
       </div>
     </div>
