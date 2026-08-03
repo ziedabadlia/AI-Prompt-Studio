@@ -31,7 +31,7 @@ class GeminiClient:
                 contents=contents,
                 config=types.GenerateContentConfig(
                     temperature=temperature,
-                    **({"system_instruction": system_prompt} if system_prompt else {}),
+                    **({"system_instruction": system_prompt}),
                 ),
             )
         except errors.APIError as e:

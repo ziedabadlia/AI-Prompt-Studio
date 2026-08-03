@@ -21,8 +21,6 @@ export function ChatContainer() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Keep the URL's ?id= param in sync with conv.activeId.
-  // Use router.replace so navigation through conversations doesn't pollute history.
   const syncUrl = useCallback(
     (id: string | null) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -33,7 +31,6 @@ export function ChatContainer() {
     [pathname, router, searchParams],
   );
 
-  // Wrap the setters that change activeId so they also update the URL.
   const selectConversation = useCallback(
     (id: string) => {
       conv._setActiveId(id);
