@@ -1,11 +1,10 @@
 import json
-from fastapi import APIRouter,HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from app.core.exceptions import LLMProviderError
 from app.schemas.chat import ChatRequest
 from app.models.llm_response import LLMResponse
-from app.services.chat_service import handle_chat
-from app.services.chat_service import _build_gemini_client
+from app.services.chat_service import handle_chat, handle_chat_stream
 
 router = APIRouter()
 
@@ -17,17 +16,11 @@ def chat(request: ChatRequest) -> LLMResponse:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-
 @router.post("/chat/stream")
 def chat_stream_endpoint(request: ChatRequest):
     def event_generator():
-        client = _build_gemini_client(request)
         try:
-            for chunk in client.chat_stream(
-                system_prompt=request.system_prompt,
-                messages=request.messages,
-                temperature=request.temperature,
-            ):
+            for chunk in handle_chat_stream(request):
                 if isinstance(chunk, str):
                     envelope = {"type": "chunk", "content": chunk}
                 else:

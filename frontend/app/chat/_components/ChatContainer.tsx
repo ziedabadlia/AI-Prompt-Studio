@@ -27,6 +27,11 @@ export function ChatContainer() {
   const currentSettings =
     conv.active?.settings ?? pendingSettings ?? DEFAULT_CHAT_SETTINGS;
 
+  const totalTokens = (conv.active?.messages ?? []).reduce(
+    (sum, m) => sum + (m.inputTokens ?? 0) + (m.outputTokens ?? 0),
+    0,
+  );
+
   function handleSettingsChange(settings: ChatSettingsType) {
     if (conv.activeId) {
       conv.updateSettings(conv.activeId, settings);
@@ -58,9 +63,6 @@ export function ChatContainer() {
     syncUrl(null);
   }, [conv, syncUrl]);
 
-  // Set synchronously in handleSend so both setMessages calls (the user-turn
-  // write and the assistant-turn write) always target the same conversation,
-  // regardless of when React flushes the state updates in between.
   const targetConvIdRef = useRef<string | null>(null);
 
   const { streamingContent, isStreaming, error, sendMessage } = useChatStream({
@@ -114,7 +116,11 @@ export function ChatContainer() {
 
       {/* Main chat column */}
       <div className='flex h-full flex-1 flex-col'>
-        <ChatHeader onToggleSettings={() => setIsPanelOpen((open) => !open)} />
+        <ChatHeader
+          onToggleSettings={() => setIsPanelOpen((open) => !open)}
+          totalTokens={totalTokens}
+          modelName={currentSettings.modelName}
+        />
         <MessageList
           messages={conv.active?.messages ?? []}
           streamingContent={streamingContent}
@@ -134,6 +140,7 @@ export function ChatContainer() {
         <ChatSettings
           settings={currentSettings}
           onChange={handleSettingsChange}
+          modelLocked={isStreaming}
         />
       </div>
 
@@ -148,6 +155,7 @@ export function ChatContainer() {
             <ChatSettings
               settings={currentSettings}
               onChange={handleSettingsChange}
+              modelLocked={isStreaming}
             />
           </div>
         </div>

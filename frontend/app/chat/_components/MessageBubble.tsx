@@ -1,4 +1,5 @@
 import type { ChatMessage } from "../_utils/types";
+import { MODEL_LABELS } from "../_utils/types";
 import { TokenBadge } from "./TokenBadge";
 
 export function MessageBubble({
@@ -6,6 +7,7 @@ export function MessageBubble({
   content,
   inputTokens,
   outputTokens,
+  modelName,
 }: ChatMessage) {
   const isUser = role === "user";
 
@@ -28,8 +30,20 @@ export function MessageBubble({
         <p className='whitespace-pre-wrap text-[15px] leading-relaxed text-[var(--foreground)]'>
           {content}
         </p>
-        {inputTokens !== undefined && outputTokens !== undefined && (
-          <TokenBadge inputTokens={inputTokens} outputTokens={outputTokens} />
+        {(inputTokens !== undefined || modelName) && (
+          <div className='flex items-center gap-1.5'>
+            {inputTokens !== undefined && outputTokens !== undefined && (
+              <TokenBadge
+                inputTokens={inputTokens}
+                outputTokens={outputTokens}
+              />
+            )}
+            {modelName && (
+              <span className='inline-flex w-fit items-center rounded-full bg-[var(--secondary)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-secondary)]'>
+                {MODEL_LABELS[modelName]}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>

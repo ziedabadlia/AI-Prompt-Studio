@@ -56,6 +56,7 @@ export function useChatStream({
               content: final.content,
               inputTokens: final.input_tokens,
               outputTokens: final.output_tokens,
+              modelName: settings.modelName,
             },
           ];
           setMessages(updated);

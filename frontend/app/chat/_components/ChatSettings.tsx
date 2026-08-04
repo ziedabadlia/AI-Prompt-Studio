@@ -12,19 +12,24 @@ import type {
   ChatSettings as ChatSettingsType,
   ModelName,
 } from "../_utils/types";
+import { MODEL_LABELS } from "../_utils/types";
 import { PromptTemplates } from "./PromptTemplates";
 
 type ChatSettingsProps = {
   settings: ChatSettingsType;
   onChange: (settings: ChatSettingsType) => void;
+  modelLocked?: boolean;
 };
 
-const MODEL_OPTIONS: { value: ModelName; label: string }[] = [
-  { value: "gemini-3.5-flash-lite", label: "Gemini 3.5 Flash Lite" },
-  { value: "gemini-3.5-flash", label: "Gemini 3.5 Flash" },
-];
+const MODEL_OPTIONS: { value: ModelName; label: string }[] = (
+  Object.entries(MODEL_LABELS) as [ModelName, string][]
+).map(([value, label]) => ({ value, label }));
 
-export function ChatSettings({ settings, onChange }: ChatSettingsProps) {
+export function ChatSettings({
+  settings,
+  onChange,
+  modelLocked,
+}: ChatSettingsProps) {
   return (
     <div className='flex h-full flex-col gap-6 overflow-y-auto p-5'>
       <div>
@@ -44,6 +49,7 @@ export function ChatSettings({ settings, onChange }: ChatSettingsProps) {
           onValueChange={(value) =>
             onChange({ ...settings, modelName: value as ModelName })
           }
+          disabled={modelLocked}
         >
           <SelectTrigger id='model-select' className='w-full'>
             <SelectValue />
@@ -56,6 +62,11 @@ export function ChatSettings({ settings, onChange }: ChatSettingsProps) {
             ))}
           </SelectContent>
         </Select>
+        {modelLocked && (
+          <p className='text-[11px] text-[var(--text-secondary)]'>
+            Model is locked while a response is streaming.
+          </p>
+        )}
       </div>
 
       {/* Temperature slider */}
