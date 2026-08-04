@@ -120,6 +120,7 @@ export function ChatContainer() {
           onToggleSettings={() => setIsPanelOpen((open) => !open)}
           totalTokens={totalTokens}
           modelName={currentSettings.modelName}
+          conversation={conv.active}
         />
         <MessageList
           messages={conv.active?.messages ?? []}
