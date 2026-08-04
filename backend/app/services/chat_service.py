@@ -7,9 +7,17 @@ from app.schemas.chat import ChatRequest
 def _build_gemini_client(request: ChatRequest) -> GeminiClient:
     return GeminiClient(client=raw_gemini_client, model_name=request.model_name)
 
-def handle_chat(request:ChatRequest) -> LLMResponse:
+def handle_chat(request: ChatRequest) -> LLMResponse:
     client = _build_gemini_client(request)
     return client.chat(
+        system_prompt=request.system_prompt,
+        messages=request.messages,
+        temperature=request.temperature,
+    )
+
+def handle_chat_stream(request: ChatRequest):
+    client = _build_gemini_client(request)
+    return client.chat_stream(
         system_prompt=request.system_prompt,
         messages=request.messages,
         temperature=request.temperature,

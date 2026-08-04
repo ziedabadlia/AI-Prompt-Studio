@@ -3,6 +3,7 @@ export type ChatMessage = {
   content: string;
   inputTokens?: number;
   outputTokens?: number;
+  modelName?: ModelName;
 };
 
 export type StreamEnvelope =
@@ -16,6 +17,11 @@ export type StreamEnvelope =
   | { type: "error"; message: string; status_code: number };
 
 export type ModelName = "gemini-3.5-flash" | "gemini-3.5-flash-lite";
+
+export const MODEL_LABELS: Record<ModelName, string> = {
+  "gemini-3.5-flash-lite": "Gemini 3.5 Flash Lite",
+  "gemini-3.5-flash": "Gemini 3.5 Flash",
+};
 
 export type ChatSettings = {
   systemPrompt: string;

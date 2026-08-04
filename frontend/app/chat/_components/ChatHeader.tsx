@@ -1,26 +1,35 @@
+import { MODEL_LABELS, type ModelName } from "../_utils/types";
+
 type ChatHeaderProps = {
   onToggleSettings: () => void;
+  totalTokens: number;
+  modelName: ModelName;
 };
 
-export function ChatHeader({ onToggleSettings }: ChatHeaderProps) {
+export function ChatHeader({
+  onToggleSettings,
+  totalTokens,
+  modelName,
+}: ChatHeaderProps) {
   return (
     <div className='flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface)] px-6 py-4'>
       <div className='flex items-center gap-2.5'>
-        <span
-          className='font-fraunces flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-semibold text-white'
-        >
+        <span className='font-fraunces flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-semibold text-white'>
           P
         </span>
-        <span
-          className='font-fraunces text-[15px] font-medium text-[var(--foreground)]'
-        >
+        <span className='font-fraunces text-[15px] font-medium text-[var(--foreground)]'>
           Prompt Studio
         </span>
       </div>
 
       <div className='flex items-center gap-3'>
+        {totalTokens > 0 && (
+          <span className='rounded-full bg-[var(--secondary)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]'>
+            {totalTokens.toLocaleString()} tokens total
+          </span>
+        )}
         <span className='rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--accent-dim)]'>
-          gemini-3.5-flash-lite
+          {MODEL_LABELS[modelName]}
         </span>
         <button
           onClick={onToggleSettings}
