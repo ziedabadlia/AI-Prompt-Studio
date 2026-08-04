@@ -53,24 +53,23 @@ export function useConversations(initialActiveId?: string | null) {
 
   // Auto-create-on-first-message: called right before the first send
   const ensureActiveConversation = useCallback(
-    (firstMessageContent: string): string => {
-      if (activeId && conversations.some((c) => c.id === activeId))
-        return activeId;
-
-      const id = crypto.randomUUID();
-      const created: Conversation = {
-        id,
-        title: deriveTitle(firstMessageContent),
-        createdAt: Date.now(),
-        messages: [],
-        settings: DEFAULT_CHAT_SETTINGS,
-      };
-      setConversations((prev) => [created, ...prev]);
-      setActiveId(id);
-      return id;
-    },
-    [activeId, conversations],
-  );
+  (firstMessageContent: string, initialSettings?: ChatSettings): string => {
+    if (activeId && conversations.some((c) => c.id === activeId))
+      return activeId;
+    const id = crypto.randomUUID();
+    const created: Conversation = {
+      id,
+      title: deriveTitle(firstMessageContent),
+      createdAt: Date.now(),
+      messages: [],
+      settings: initialSettings ?? DEFAULT_CHAT_SETTINGS,
+    };
+    setConversations((prev) => [created, ...prev]);
+    setActiveId(id);
+    return id;
+  },
+  [activeId, conversations],
+);
 
   const updateMessages = useCallback((id: string, messages: ChatMessage[]) => {
     setConversations((prev) =>

@@ -37,5 +37,13 @@ export interface Conversation {
   settings: ChatSettings;
 }
 
+export type PromptTemplate = {
+  id: string;
+  name: string;
+  content: string;
+  createdAt: number;
+  isBuiltIn: boolean;
+};
+
 export const TOKEN_THRESHOLD_LOW = 200;
 export const TOKEN_THRESHOLD_HIGH = 800;
