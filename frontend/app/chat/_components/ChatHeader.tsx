@@ -1,22 +1,31 @@
-import { MODEL_LABELS, type ModelName } from "../_utils/types";
+import Image from "next/image";
+import {
+  MODEL_LABELS,
+  type ModelName,
+  type Conversation,
+} from "../_utils/types";
+import { ExportMenu } from "./ExportMenu";
 
 type ChatHeaderProps = {
   onToggleSettings: () => void;
   totalTokens: number;
   modelName: ModelName;
+  conversation: Conversation | null;
 };
 
 export function ChatHeader({
   onToggleSettings,
   totalTokens,
   modelName,
+  conversation,
 }: ChatHeaderProps) {
   return (
     <div className='flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface)] px-6 py-4'>
       <div className='flex items-center gap-2.5'>
-        <span className='font-fraunces flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-semibold text-white'>
+        {/* <span className='font-fraunces flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-semibold text-white'>
           P
-        </span>
+        </span> */}
+        <Image src='/logo.png' alt='Logo' width={26} height={26} />
         <span className='font-fraunces text-[15px] font-medium text-[var(--foreground)]'>
           Prompt Studio
         </span>
@@ -31,6 +40,7 @@ export function ChatHeader({
         <span className='rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--accent-dim)]'>
           {MODEL_LABELS[modelName]}
         </span>
+        <ExportMenu conversation={conversation} />
         <button
           onClick={onToggleSettings}
           aria-label='Toggle settings'
